@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🚗 Blinker Controller</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Blinker Controller</h1>
+            <div class="subtitle">Custom Effect Designer</div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-indicator {{hazard_indicator}}"></div>
+                <span>Hazard: {{hazard_status}}</span>
+            </div>
+            <div class="status-item">
+                <div class="status-indicator {{effect_indicator}}"></div>
+                <span>Effect: {{effect_status}}</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔧 Relay Testing</div>
+            <p>Hold buttons to test relays manually:</p>
+            <div class="test-controls">
+                <button class="test-button left" 
+                    onmousedown="testRelay('left', 'start')" 
+                    onmouseup="testRelay('left', 'stop')"
+                    ontouchstart="testRelay('left', 'start')" 
+                    ontouchend="testRelay('left', 'stop')">
+                    ← Left
+                </button>
+                <button class="test-button right" 
+                    onmousedown="testRelay('right', 'start')" 
+                    onmouseup="testRelay('right', 'stop')"
+                    ontouchstart="testRelay('right', 'start')" 
+                    ontouchend="testRelay('right', 'stop')">
+                    Right →
+                </button>
+                <button class="test-button both" 
+                    onmousedown="testRelay('both', 'start')" 
+                    onmouseup="testRelay('both', 'stop')"
+                    ontouchstart="testRelay('both', 'start')" 
+                    ontouchend="testRelay('both', 'stop')">
+                    ↔ Both
+                </button>
+            </div>
+        </div>
+
+        <form method="post" action="/config">
+            <div class="section">
+                <div class="section-title">📡 WiFi Settings</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="wifi_ssid">Network Name</label>
+                        <input type="text" id="wifi_ssid" name="wifi_ssid" value="{{wifi_ssid}}" maxlength="32">
+                    </div>
+                    <div class="form-group">
+                        <label for="wifi_password">Password</label>
+                        <input type="password" id="wifi_password" name="wifi_password" value="{{wifi_password}}" maxlength="63">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="blink_speed">Hazard Speed (ms)</label>
+                    <input type="range" id="blink_speed" name="blink_speed" value="{{blink_speed}}" min="100" max="2000" step="50" oninput="updateSpeedDisplay(this.value)">
+                    <div class="speed-display">
+                        <span id="speed_display">{{blink_speed}}ms</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">⚡ Left Effect</div>
+                <div class="preview" id="left_effect_preview"></div>
+                <div class="frames-container" id="left_effect_frames">
+                    {{left_frames_html}}
+                </div>
+                <button type="button" class="add-btn" onclick="addFrame('left_effect')">➕ Add Frame</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">⚡ Right Effect</div>
+                <div class="preview" id="right_effect_preview"></div>
+                <div class="frames-container" id="right_effect_frames">
+                    {{right_frames_html}}
+                </div>
+                <button type="button" class="add-btn" onclick="addFrame('right_effect')">➕ Add Frame</button>
+            </div>
+
+            <div class="section">
+                <button type="submit" class="save-btn">💾 Save Settings</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
