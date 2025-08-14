@@ -807,6 +807,24 @@ def handle_web_request(server_socket, ap):
                 except:
                     client_socket.send('HTTP/1.1 500 Error\r\n\r\nJS Error'.encode('utf-8'))
             
+            elif 'GET /trigger_effect' in request:
+                # Handle effect trigger from dashboard
+                query_start = request.find('?')
+                if query_start != -1:
+                    query_end = request.find(' ', query_start)
+                    query_string = request[query_start+1:query_end]
+                    params = parse_form_data(query_string)
+                    
+                    side = params.get('side')
+                    if side in ['left', 'right'] and not hazard_mode and not effect_playing:
+                        # Trigger the effect
+                        start_effect(side + '_effect')
+                        client_socket.send('HTTP/1.1 200 OK\r\n\r\nOK'.encode('utf-8'))
+                    else:
+                        client_socket.send('HTTP/1.1 409 Conflict\r\n\r\nEffect blocked'.encode('utf-8'))
+                else:
+                    client_socket.send('HTTP/1.1 400 Bad Request\r\n\r\nMissing side parameter'.encode('utf-8'))
+            
             else:
                 # Send main page response
                 try:
