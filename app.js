@@ -156,3 +156,20 @@ window.addEventListener('load', function() {
     updatePreview('left_effect');
     updatePreview('right_effect');
 });
+
+function triggerEffect(side) {
+    fetch('/trigger_effect?side=' + side)
+        .then(response => response.text())
+        .then(data => {
+            console.log('Effect triggered:', side);
+            // Optional: Show feedback to user
+            const button = document.querySelector('.effect-trigger-button.' + side + '-effect');
+            if (button) {
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 200);
+            }
+        })
+        .catch(e => console.log('Effect trigger failed:', e));
+}
